@@ -29,12 +29,12 @@ public class Desktop extends javax.swing.JPanel {
         jLayeredPane2 = new javax.swing.JLayeredPane();
         jLabel1 = new javax.swing.JLabel();
 
-        jLayeredPane2.setBorder(new javax.swing.border.MatteBorder(new javax.swing.ImageIcon(getClass().getResource("/image/des_1.jpg")))); // NOI18N
+        jLayeredPane2.setBorder(new javax.swing.border.MatteBorder(null));
 
         jLabel1.setFont(new java.awt.Font("Monotype Corsiva", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 102, 0));
         jLabel1.setText("Wel Come");
-        jLabel1.setBounds(240, 110, 320, 40);
+        jLabel1.setBounds(130, 20, 320, 40);
         jLayeredPane2.add(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
