@@ -1,6 +1,6 @@
 package laundryserver.impl;
 
-import controller.ItemController;
+import laundrycommon.controller.ItemController;
 
 /**
  *

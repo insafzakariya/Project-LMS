@@ -8,5 +8,10 @@
 /LaundryReception/nbproject/private/
 /LaundryCommon/nbproject/private/
 /LaundryServer/nbproject/private/
+<<<<<<< HEAD
 /JavaApplication27/nbproject/private/
 /JavaApplication27/build/
+=======
+/LaundryServer/build/
+/LaundryServer/dist/
+>>>>>>> 21da7757e954c72afe5d36745612e46de5c6765e

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+package laundrytagging.view;
 
 /**
  *
@@ -29,7 +29,7 @@ public class Desktop extends javax.swing.JPanel {
         jLayeredPane2 = new javax.swing.JLayeredPane();
         jLabel1 = new javax.swing.JLabel();
 
-        jLayeredPane2.setBorder(new javax.swing.border.MatteBorder(null));
+        jLayeredPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel1.setFont(new java.awt.Font("Monotype Corsiva", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 102, 0));
