@@ -1,10 +1,10 @@
 package laundryserver.impl;
 
-import controller.ItemController;
-import controller.LaundryController;
-import controller.MemberController;
-import controller.PackageController;
-import controller.ServiceController;
+import laundrycommon.controller.ItemController;
+import laundrycommon.controller.LaundryController;
+import laundrycommon.controller.MemberController;
+import laundrycommon.controller.PackageController;
+import laundrycommon.controller.ServiceController;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import laundryserver.controller.RemoteFactory;

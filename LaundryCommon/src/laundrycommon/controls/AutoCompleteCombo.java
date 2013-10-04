@@ -1,4 +1,4 @@
-package controls;
+package laundrycommon.controls;
 
 
 import java.awt.event.FocusAdapter;

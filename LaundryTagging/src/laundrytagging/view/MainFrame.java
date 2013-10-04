@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+package laundrytagging.view;
 
 import com.jtattoo.plaf.aero.AeroLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel;
@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import view.Recieve;
+import laundrytagging.view.Recieve;
 
 /**
  *

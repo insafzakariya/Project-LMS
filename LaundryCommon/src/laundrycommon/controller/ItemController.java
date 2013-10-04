@@ -1,4 +1,4 @@
-package controller;
+package laundrycommon.controller;
 
 import java.rmi.Remote;
 
