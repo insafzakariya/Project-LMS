@@ -4,7 +4,7 @@
  */
 package laundryreception.view;
 
-import laundrycommon.AutoCompleteCombo.AutoCompleteCombo;
+import laundrycommon.commoclass.AutoCompleteCombo;
 import javax.swing.UIManager;
 
 /**

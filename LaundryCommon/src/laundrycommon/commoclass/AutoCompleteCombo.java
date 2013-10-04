@@ -1,4 +1,4 @@
-package laundrycommon.AutoCompleteCombo;
+package laundrycommon.commoclass;
 
 
 import java.awt.event.FocusAdapter;
