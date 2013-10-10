@@ -1,4 +1,4 @@
-package laundrycommon.commoclass;
+package laundrycommon.commonclass;
 
 
 import java.awt.event.FocusAdapter;
