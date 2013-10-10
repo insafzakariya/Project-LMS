@@ -7,6 +7,7 @@ import laundrycommon.controller.PackageController;
 import laundrycommon.controller.ServiceController;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import laundrycommon.controller.MembershipController;
 import laundrycommon.controller.RemoteFactory;
 
 /**
@@ -40,5 +41,10 @@ public class RemoteFactoryImpl extends UnicastRemoteObject implements RemoteFact
     @Override
     public PackageController getPackageController() throws RemoteException {
         return new PackageControllerImpl();
+    }
+
+    @Override
+    public MembershipController getMembershipController() throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
