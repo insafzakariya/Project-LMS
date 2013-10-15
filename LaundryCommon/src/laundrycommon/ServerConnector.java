@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import laundrycommon.controller.CustomerController;
 import laundrycommon.controller.ItemController;
 import laundrycommon.controller.LaundryController;
 import laundrycommon.controller.MemberController;
@@ -28,6 +29,7 @@ public class ServerConnector {
     private LaundryController laundryController;
     private PackageController packageController;
     private MembershipController membershipController;
+    private CustomerController customerController;
     
     
     private ServerConnector() throws NotBoundException, MalformedURLException, RemoteException{
@@ -82,6 +84,12 @@ public class ServerConnector {
             membershipController=remoteFactory.getMembershipController();
         }
         return membershipController;
+    }
+    public CustomerController getCustomerController()throws RemoteException{
+        if(customerController==null){
+            customerController=remoteFactory.getCustomerController();
+        }
+        return customerController;
     }
     
     
