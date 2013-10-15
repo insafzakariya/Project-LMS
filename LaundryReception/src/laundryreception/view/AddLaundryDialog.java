@@ -6,6 +6,7 @@ package laundryreception.view;
 
 import laundrycommon.commonclass.AutoCompleteCombo;
 import javax.swing.UIManager;
+import laundrycommon.commonclass.accordion.AccordionMenu;
 
 /**
  *
@@ -19,6 +20,12 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     public AddLaundryDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        AccordionMenu itemMenu = new AccordionMenu();
+        itemMenu.addNewMenu("gents", "Gents");
+        itemMenu.addNewLeafTo("gents", "shirt", "Shirt");
+        itemMenu.addNewMenu("ladies", "Ladies");
+        itemMenu.addNewLeafTo("ladies", "ladies", "Blouse");
+        itemPanel.add(itemMenu);
     }
 
     /**
