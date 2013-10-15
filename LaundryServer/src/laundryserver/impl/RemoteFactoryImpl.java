@@ -45,6 +45,6 @@ public class RemoteFactoryImpl extends UnicastRemoteObject implements RemoteFact
 
     @Override
     public MembershipController getMembershipController() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return new MemberShipControllerImpl();
     }
 }
