@@ -20,8 +20,6 @@ public class CustomerDBAccess {
     public boolean addCustomer(Customer customer) throws RemoteException, SQLException, ClassNotFoundException {
         boolean check = false;
         try {
-
-
             Connection connection = DBConnection.getConnectionTo();
             String sql = "INSERT INTO customer(cid,name,telephone)" + "values(?,?,?)";
             Object data[] = {customer.getCid(), customer.getName(), customer.getTelNo()};

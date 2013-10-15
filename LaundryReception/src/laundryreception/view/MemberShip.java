@@ -1,7 +1,3 @@
- /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package laundryreception.view;
 
 import java.net.MalformedURLException;
@@ -15,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import laundrycommon.ServerConnector;
 import laundrycommon.controller.MembershipController;
-import laundrycommon.model.MemberShipType;
+import laundrycommon.model.MembershipType;
 
 /**
  *
@@ -222,7 +218,8 @@ public class MemberShip extends javax.swing.JDialog {
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         String memberShipType = memberShipTypeTextField.getText();
-        double discount=Double.parseDouble(discountField.getText());
+        float discount = Float.parseFloat(discountField.getText());
+        
         if (memberShipTypeTextField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "First Add Membership Type.........");
             memberShipTypeTextField.requestFocus();
@@ -235,22 +232,17 @@ public class MemberShip extends javax.swing.JDialog {
             } else {
                 for (int i = 0; i < dtm.getRowCount(); i++) {
                     if (dtm.getValueAt(i, 1).toString().equals(memberShipType)) {
-
                         check = true;
-
                     }
-
                 }
                 if (check == false) {
                     Object secondrow[] = {(dtm.getRowCount() + 1), memberShipType,discount};
                     dtm.addRow(secondrow);
-
                 }
             }
         }
 
-
-        MemberShipType memberShipTypemodel = new MemberShipType(String.valueOf(dtm.getRowCount()), memberShipType,discount);
+        MembershipType memberShipTypemodel = new MembershipType(String.valueOf(dtm.getRowCount()), memberShipType, discount);
         boolean res;
         try {
             res = membershipController.setMemberShipType(memberShipTypemodel);
@@ -261,10 +253,9 @@ public class MemberShip extends javax.swing.JDialog {
             }
         } catch (RemoteException ex) {
             Logger.getLogger(MemberShip.class.getName()).log(Level.SEVERE, null, ex);
-
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Duplicate");
-            //Logger.getLogger(MemberShip.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MemberShip.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(MemberShip.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -351,8 +342,8 @@ public class MemberShip extends javax.swing.JDialog {
     private void getMemberShipTypes() {
         try {
             dtm.setRowCount(0);
-            ArrayList<MemberShipType> memberShipTypes = membershipController.getMemberShipTypes();
-            for (MemberShipType memberShipType : memberShipTypes) {
+            ArrayList<MembershipType> memberShipTypes = membershipController.getMemberShipTypes();
+            for (MembershipType memberShipType : memberShipTypes) {
                 Object[] rows = {memberShipType.getMt(), memberShipType.getType(),memberShipType.getDiscount()};
                 System.out.println(memberShipType.getMt()+memberShipType.getDiscount());
                 dtm.addRow(rows);

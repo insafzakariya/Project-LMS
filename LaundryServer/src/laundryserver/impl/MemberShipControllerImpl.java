@@ -9,10 +9,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import laundrycommon.controller.MembershipController;
-import laundrycommon.model.MemberShipType;
-import laundryserver.dbaccess.MemberShipTypeDBAccess;
+import laundrycommon.model.MembershipType;
+import laundryserver.dbaccess.MembershipTypeDBAccess;
 
 /**
  *
@@ -20,27 +19,27 @@ import laundryserver.dbaccess.MemberShipTypeDBAccess;
  */
 public class MemberShipControllerImpl extends UnicastRemoteObject implements MembershipController {
 
-    private MemberShipTypeDBAccess memberShipTypeDBAccess = new MemberShipTypeDBAccess();
+    private MembershipTypeDBAccess memberShipTypeDBAccess = new MembershipTypeDBAccess();
 
     MemberShipControllerImpl() throws RemoteException {
     }
 
     @Override
-    public boolean setMemberShipType(MemberShipType memberShipType) throws RemoteException, SQLException, ClassNotFoundException {
+    public boolean setMemberShipType(MembershipType memberShipType) throws RemoteException, SQLException, ClassNotFoundException {
         System.out.println("1st");
         return memberShipTypeDBAccess.setMemberShipType(memberShipType);
     }
 
     @Override
-    public ArrayList<MemberShipType> getMemberShipTypes() throws RemoteException, SQLException, ClassNotFoundException {
+    public ArrayList<MembershipType> getMemberShipTypes() throws RemoteException, SQLException, ClassNotFoundException {
         System.out.println("test");
-        ArrayList<MemberShipType> memberShipTypes = new ArrayList<>();
+        ArrayList<MembershipType> memberShipTypes = new ArrayList<>();
         ResultSet resultSet = memberShipTypeDBAccess.getMemberShipTypes();
         while (resultSet.next()) {
-            MemberShipType memberShipType = new MemberShipType();
+            MembershipType memberShipType = new MembershipType();
             memberShipType.setMt(resultSet.getString("mt"));
             memberShipType.setType(resultSet.getString("type"));
-            memberShipType.setDiscount(resultSet.getDouble("discount"));
+            memberShipType.setDiscount(resultSet.getFloat("discount"));
             memberShipTypes.add(memberShipType);
 
         }

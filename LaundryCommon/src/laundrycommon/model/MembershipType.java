@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package laundrycommon.model;
 
 import java.io.Serializable;
@@ -10,22 +6,20 @@ import java.io.Serializable;
  *
  * @author insaf
  */
-public class MemberShipType implements Serializable{
+public class MembershipType implements Serializable{
     private String mt;
     private String type;
-    private Double discount;
+    private float discount;
 
-    public MemberShipType() {
+    public MembershipType() {
     }
 
-    public MemberShipType(String mt, String type,double discount) {
+    public MembershipType(String mt, String type, float discount) {
         this.mt = mt;
         this.type = type;
         this.discount=discount;
     }
     
-    
-
     /**
      * @return the mt
      */
@@ -57,14 +51,14 @@ public class MemberShipType implements Serializable{
     /**
      * @return the discount
      */
-    public Double getDiscount() {
+    public float getDiscount() {
         return discount;
     }
 
     /**
      * @param discount the discount to set
      */
-    public void setDiscount(Double discount) {
+    public void setDiscount(float discount) {
         this.discount = discount;
     }
     

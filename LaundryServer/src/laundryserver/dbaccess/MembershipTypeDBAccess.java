@@ -1,17 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package laundryserver.dbaccess;
 
 import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import laundrycommon.model.MemberShipType;
+import laundrycommon.model.MembershipType;
 import laundryserver.db.DBConnection;
 import laundryserver.db.DBHandel;
 
@@ -19,21 +13,20 @@ import laundryserver.db.DBHandel;
  *
  * @author insaf
  */
-public class MemberShipTypeDBAccess {
+public class MembershipTypeDBAccess {
 
     private static ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    public boolean setMemberShipType(MemberShipType memberShipType) throws RemoteException, SQLException, ClassNotFoundException {
+    public boolean setMemberShipType(MembershipType memberShipType) throws RemoteException, SQLException, ClassNotFoundException {
         boolean check = false;
         try {
-
             System.out.println("2nd");
             Connection connection = DBConnection.getConnectionTo();
-            String sql = "INSERT INTO membership_type(mt,type,discount)" + "values(?,?,?)";
+            String sql = "INSERT INTO membership(mid,type,discount) VALUES(?,?,?)";
             Object data[] = {memberShipType.getMt(), memberShipType.getType(),memberShipType.getDiscount()};
             System.out.println("3rd");
             int res = DBHandel.setData(connection, sql, data);
-
+            
             System.out.println("sdvjgs" + res);
             if (res > 0) {
                 check = true;

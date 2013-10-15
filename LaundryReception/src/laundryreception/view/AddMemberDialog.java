@@ -19,7 +19,7 @@ import laundrycommon.controller.CustomerController;
 import laundrycommon.controller.MembershipController;
 import laundrycommon.model.Customer;
 import laundrycommon.model.Member;
-import laundrycommon.model.MemberShipType;
+import laundrycommon.model.MembershipType;
 import laundryserver.idgenarate.IDGenarate;
 import org.omg.CORBA.portable.RemarshalException;
 
@@ -426,8 +426,8 @@ public class AddMemberDialog extends javax.swing.JDialog {
     private void getMemberShipTypes() {
         try {
             dtm.setRowCount(0);
-            ArrayList<MemberShipType> memberShipTypes = membershipController.getMemberShipTypes();
-            for (MemberShipType memberShipType : memberShipTypes) {
+            ArrayList<MembershipType> memberShipTypes = membershipController.getMemberShipTypes();
+            for (MembershipType memberShipType : memberShipTypes) {
                 Object[] rows = {false, memberShipType.getMt(), memberShipType.getType()};
                 dtm.addRow(rows);
             }
