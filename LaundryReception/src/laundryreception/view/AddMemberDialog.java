@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import laundrycommon.ServerConnector;
 import laundrycommon.controller.CustomerController;
+import laundrycommon.controller.MemberController;
 import laundrycommon.controller.MembershipController;
 import laundrycommon.model.Customer;
 import laundrycommon.model.Member;
@@ -33,6 +34,7 @@ public class AddMemberDialog extends javax.swing.JDialog {
     MembershipController membershipController;
     DefaultTableModel dtm;
     CustomerController customerController;
+    MemberController memberController;
 
     /**
      * Creates new form Member
@@ -46,6 +48,7 @@ public class AddMemberDialog extends javax.swing.JDialog {
             serverConnector = ServerConnector.getServerConnector();
             membershipController = serverConnector.getMemberShipController();
             customerController = serverConnector.getCustomerController();
+            memberController=serverConnector.getMemberController();
             dtm = (DefaultTableModel) addMemberShipTypeTable.getModel();
             getMemberShipTypes();
         } catch (NotBoundException ex) {
@@ -293,8 +296,16 @@ public class AddMemberDialog extends javax.swing.JDialog {
                     String code = dtm.getValueAt(selectedRow, 2).toString();
                     
                     Member member = new Member(customerID, code);
+                    boolean result=memberController.addMember(member);
+                    if(result){
+                        JOptionPane.showMessageDialog(this, "Done Member");
+                        getMemberID();
+                    }else{
+                        JOptionPane.showMessageDialog(this, "Not Done Member");
+                    }
+                    
 
-                    getMemberID();
+                    
 
                 } else {
                     JOptionPane.showMessageDialog(this, "Not Done");
