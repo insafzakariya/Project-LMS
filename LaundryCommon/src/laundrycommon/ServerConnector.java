@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import laundrycommon.controller.ItemController;
 import laundrycommon.controller.LaundryController;
 import laundrycommon.controller.MemberController;
+import laundrycommon.controller.MembershipController;
 import laundrycommon.controller.PackageController;
 import laundrycommon.controller.RemoteFactory;
 import laundrycommon.controller.ServiceController;
@@ -26,14 +27,15 @@ public class ServerConnector {
     private ItemController itemController;
     private LaundryController laundryController;
     private PackageController packageController;
+    private MembershipController membershipController;
     
     
     private ServerConnector() throws NotBoundException, MalformedURLException, RemoteException{
-        remoteFactory= (RemoteFactory) Naming.lookup("rmi://localhost:REGISTRY_PORT/LaundryFactory");
+        remoteFactory= (RemoteFactory) Naming.lookup("rmi://localhost:5050/LaundryFactory");
         
     }
     
-    private static ServerConnector createServerConnector() throws NotBoundException, MalformedURLException, RemoteException{
+    public static ServerConnector getServerConnector() throws NotBoundException, MalformedURLException, RemoteException{
         if(serverConnector==null){
             serverConnector=new ServerConnector();
         }
@@ -45,7 +47,7 @@ public class ServerConnector {
         
     }
     
-    private MemberController getMemberController() throws RemoteException{
+    public MemberController getMemberController() throws RemoteException{
         if(memberController==null){
             memberController=remoteFactory.getMemberController();
         }
@@ -53,27 +55,33 @@ public class ServerConnector {
         return memberController;
         
     }
-    private ItemController getItemController() throws RemoteException{
+   public ItemController getItemController() throws RemoteException{
         if(itemController==null){
             itemController=remoteFactory.getItemController();
         }
         return null;
         
     }
-    private LaundryController getLaundryController() throws RemoteException{
+   public LaundryController getLaundryController() throws RemoteException{
        if(laundryController==null){
            laundryController=remoteFactory.getLaundryController();
        }
        return laundryController;
         
     }
-    private PackageController getPackageController(){
+    public PackageController getPackageController(){
         return null;
         
     }
-    private ServiceController serviceController(){
+    public ServiceController getserviceController(){
         return null;
         
+    }
+    public MembershipController getMemberShipController() throws RemoteException{
+        if(membershipController==null){
+            membershipController=remoteFactory.getMembershipController();
+        }
+        return membershipController;
     }
     
     

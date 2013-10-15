@@ -23,6 +23,7 @@ public class DBHandel {
 
         }
         int res = preparedStatement.executeUpdate();
+        System.out.println("res"+res);
 
         return res;
 
@@ -31,6 +32,13 @@ public class DBHandel {
         Statement statement=connection.createStatement();
         ResultSet resultSet=statement.executeQuery(string);
         return resultSet;
+        
+    }
+    public static int  setSingleData(Connection connection,String sql) throws SQLException{
+        Statement statement=connection.createStatement();
+        int res=statement.executeUpdate(sql);
+        
+        return res;
         
     }
 }

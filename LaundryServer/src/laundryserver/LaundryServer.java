@@ -18,7 +18,7 @@ public class LaundryServer {
      */
     public static void main(String[] args) {
         try {
-            Registry laundryServerReg = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+            Registry laundryServerReg = LocateRegistry.createRegistry(5050);
             laundryServerReg.rebind("LaundryFactory", new RemoteFactoryImpl());
         } catch (RemoteException ex) {
             Logger.getLogger(LaundryServer.class.getName()).log(Level.SEVERE, null, ex);
