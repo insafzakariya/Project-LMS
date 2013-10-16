@@ -6,7 +6,7 @@ package laundryreception.view;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public class AddItemDialog extends javax.swing.JDialog {
 

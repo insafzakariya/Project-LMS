@@ -11,7 +11,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public class ReceptionMain extends javax.swing.JFrame {
 

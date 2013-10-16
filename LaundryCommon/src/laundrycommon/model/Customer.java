@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  * @author insaf
  */
-public class Customer implements Serializable{
+public class Customer implements Serializable, Model{
     private String cid;
     private String name;
     private String telNo;

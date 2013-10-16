@@ -10,7 +10,7 @@ import laundrycommon.commonclass.accordion.AccordionMenu;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public class AddLaundryDialog extends javax.swing.JDialog {
 
@@ -296,6 +296,8 @@ public class AddLaundryDialog extends javax.swing.JDialog {
                         System.exit(0);
                     }
                 });
+                dialog.setVisible(true);
+                dialog.setVisible(false);
                 dialog.setVisible(true);
             }
         });

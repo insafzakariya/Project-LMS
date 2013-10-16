@@ -61,7 +61,7 @@ public class ServerConnector {
         if(itemController==null){
             itemController=remoteFactory.getItemController();
         }
-        return null;
+        return itemController;
         
     }
    public LaundryController getLaundryController() throws RemoteException{

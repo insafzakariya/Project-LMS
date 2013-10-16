@@ -15,7 +15,7 @@ import laundrycommon.model.MembershipType;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public class MemberShip extends javax.swing.JDialog {
 

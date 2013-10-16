@@ -22,11 +22,10 @@ import laundrycommon.model.Customer;
 import laundrycommon.model.Member;
 import laundrycommon.model.MembershipType;
 import laundryserver.idgenarate.IDGenarate;
-import org.omg.CORBA.portable.RemarshalException;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public class AddMemberDialog extends javax.swing.JDialog {
 
@@ -43,6 +42,7 @@ public class AddMemberDialog extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         getMemberID();
+        setLocationRelativeTo(parent);
 
         try {
             serverConnector = ServerConnector.getServerConnector();
