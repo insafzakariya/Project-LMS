@@ -21,7 +21,7 @@ public class IDGenarate {
     public static void nextID(JLabel label, String prefix, String coloum, String table) throws ClassNotFoundException, SQLException {
         try {
             Connection connection = DBConnection.getConnectionTo();
-            String sql = "SELECT" + coloum + "from" + table + "ORDER BY 1 DESC LIMIT 1";
+            String sql = "SELECT " + coloum + " FROM " + table + " ORDER BY 1 DESC LIMIT 1";
             ResultSet resultSet = DBHandel.getData(connection, sql);
             NumberFormat nf = NumberFormat.getInstance();
             nf.setMinimumIntegerDigits(3);

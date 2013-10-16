@@ -14,4 +14,5 @@ public interface RemoteFactory extends Remote {
     public PackageController getPackageController()throws RemoteException;
     public ServiceController getServiceController() throws RemoteException;
     public MembershipController getMembershipController()throws RemoteException;
+    public CustomerController getCustomerController()throws RemoteException;
 }

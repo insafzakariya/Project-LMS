@@ -4,7 +4,7 @@
  */
 package laundryreception.view;
 
-import laundrycommon.commonclass.AutoCompleteCombo;
+
 import javax.swing.UIManager;
 
 /**
@@ -34,7 +34,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new AutoCompleteCombo();
+        jComboBox1 = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();

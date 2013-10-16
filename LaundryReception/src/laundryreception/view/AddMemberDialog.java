@@ -12,19 +12,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import laundrycommon.ServerConnector;
+import laundrycommon.controller.CustomerController;
 import laundrycommon.controller.MembershipController;
+import laundrycommon.model.Customer;
+import laundrycommon.model.Member;
 import laundrycommon.model.MemberShipType;
+import laundryserver.idgenarate.IDGenarate;
+import org.omg.CORBA.portable.RemarshalException;
 
 /**
  *
  * @author insaf
  */
 public class AddMemberDialog extends javax.swing.JDialog {
+
     ServerConnector serverConnector;
     MembershipController membershipController;
     DefaultTableModel dtm;
+    CustomerController customerController;
 
     /**
      * Creates new form Member
@@ -32,10 +40,14 @@ public class AddMemberDialog extends javax.swing.JDialog {
     public AddMemberDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        getMemberID();
+
         try {
-            serverConnector=  ServerConnector.getServerConnector();
+            serverConnector = ServerConnector.getServerConnector();
             membershipController = serverConnector.getMemberShipController();
-            dtm=(DefaultTableModel) addMemberShipTypeTable.getModel();
+            customerController = serverConnector.getCustomerController();
+            dtm = (DefaultTableModel) addMemberShipTypeTable.getModel();
+            getMemberShipTypes();
         } catch (NotBoundException ex) {
             Logger.getLogger(AddMemberDialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MalformedURLException ex) {
@@ -61,16 +73,13 @@ public class AddMemberDialog extends javax.swing.JDialog {
         nameField = new javax.swing.JTextField();
         telField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        addressField = new javax.swing.JTextPane();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         addMemberShipTypeTable = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
+        saveButton = new javax.swing.JButton();
+        memberID = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -111,15 +120,6 @@ public class AddMemberDialog extends javax.swing.JDialog {
 
         jLabel2.setText("Tel:");
 
-        jLabel3.setText("Address:");
-
-        addressField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                addressFieldKeyReleased(evt);
-            }
-        });
-        jScrollPane1.setViewportView(addressField);
-
         jLabel1.setText("Name:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -127,16 +127,14 @@ public class AddMemberDialog extends javax.swing.JDialog {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(22, 22, 22)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(nameField)
-                    .addComponent(telField, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(telField, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -150,10 +148,6 @@ public class AddMemberDialog extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(telField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -176,6 +170,11 @@ public class AddMemberDialog extends javax.swing.JDialog {
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+        });
+        addMemberShipTypeTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addMemberShipTypeTableMouseClicked(evt);
             }
         });
         jScrollPane3.setViewportView(addMemberShipTypeTable);
@@ -202,10 +201,10 @@ public class AddMemberDialog extends javax.swing.JDialog {
 
         jPanel5.setBackground(new java.awt.Color(0, 204, 204));
 
-        jButton1.setText("Save");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                saveButtonActionPerformed(evt);
             }
         });
 
@@ -215,16 +214,15 @@ public class AddMemberDialog extends javax.swing.JDialog {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(saveButton)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton1)
+            .addComponent(saveButton)
         );
 
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel4.setText("CID");
+        memberID.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -240,13 +238,13 @@ public class AddMemberDialog extends javax.swing.JDialog {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(memberID, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel4)
+                .addComponent(memberID, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
@@ -274,9 +272,44 @@ public class AddMemberDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        if (nameField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Insert Name");
+        } else {
+            String cid = memberID.getText();
+            String customerName = nameField.getText();
+
+            String telNo = telField.getText().substring(1);
+
+
+            Customer customer = new Customer(cid, customerName, telNo);
+            try {
+                boolean res = customerController.addCustomer(customer);
+                if (res) {
+                    JOptionPane.showMessageDialog(this, "Done");
+                    int selectedRow = addMemberShipTypeTable.getSelectedRow();
+                    
+                    String customerID = memberID.getText();
+                    String code = dtm.getValueAt(selectedRow, 2).toString();
+                    
+                    Member member = new Member(customerID, code);
+
+                    getMemberID();
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Not Done");
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(AddMemberDialog.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(AddMemberDialog.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(AddMemberDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+
+    }//GEN-LAST:event_saveButtonActionPerformed
 
     private void telFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_telFieldKeyReleased
         if (telField.getText().isEmpty()) {
@@ -306,9 +339,7 @@ public class AddMemberDialog extends javax.swing.JDialog {
             }
 
         }
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            addressField.requestFocus();
-        }
+
     }//GEN-LAST:event_telFieldKeyReleased
 
     private void telFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telFieldActionPerformed
@@ -322,11 +353,17 @@ public class AddMemberDialog extends javax.swing.JDialog {
 
     }//GEN-LAST:event_nameFieldKeyReleased
 
-    private void addressFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addressFieldKeyReleased
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           getMemberShipTypes();
+    private void addMemberShipTypeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMemberShipTypeTableMouseClicked
+        int selectedRow = addMemberShipTypeTable.getSelectedRow();
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            String valueAt = dtm.getValueAt(i, 0).toString();
+            if (i != selectedRow) {
+                dtm.setValueAt(false, i, 0);
+            }
+
         }
-    }//GEN-LAST:event_addressFieldKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addMemberShipTypeTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -371,29 +408,27 @@ public class AddMemberDialog extends javax.swing.JDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable addMemberShipTypeTable;
-    private javax.swing.JTextPane addressField;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel memberID;
     private javax.swing.JTextField nameField;
+    private javax.swing.JButton saveButton;
     private javax.swing.JTextField telField;
     // End of variables declaration//GEN-END:variables
- private void getMemberShipTypes() {
+
+    private void getMemberShipTypes() {
         try {
             dtm.setRowCount(0);
             ArrayList<MemberShipType> memberShipTypes = membershipController.getMemberShipTypes();
             for (MemberShipType memberShipType : memberShipTypes) {
-                Object[] rows = {false,memberShipType.getMt(), memberShipType.getType()};
+                Object[] rows = {false, memberShipType.getMt(), memberShipType.getType()};
                 dtm.addRow(rows);
             }
         } catch (RemoteException ex) {
@@ -403,5 +438,19 @@ public class AddMemberDialog extends javax.swing.JDialog {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(MemberShip.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void getMemberID() {
+        try {
+            String prefix = "C";
+            String coloumn = "cid";
+            String table = "customer";
+            IDGenarate.nextID(memberID, prefix, coloumn, table);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddMemberDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddMemberDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }
