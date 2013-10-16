@@ -1,5 +1,7 @@
 package laundryreception.view;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -7,13 +9,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import laundrycommon.ServerConnector;
+import laundrycommon.commonclass.accordion.AccordionItem;
+import laundrycommon.commonclass.accordion.AccordionLeafItem;
 import laundrycommon.controller.CustomerController;
 import laundrycommon.controller.ItemController;
 import laundrycommon.controller.MemberController;
+import laundrycommon.controller.ServiceController;
 import laundrycommon.model.Item;
+import laundrycommon.model.Service;
 
 /**
  *
@@ -25,6 +32,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     ItemController itemController;
     CustomerController customerController;
     MemberController memberController;
+    ServiceController serviceController;
     DefaultTableModel dtm;
 
     /**
@@ -33,27 +41,18 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     public AddLaundryDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+
         try {
             serverConnector = ServerConnector.getServerConnector();
             itemController = serverConnector.getItemController();
             customerController = serverConnector.getCustomerController();
+            serviceController = serverConnector.getServiceController();
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         fillItemMenu();
-//        itemMenu.addNewMenu("Test", "Test menu");
-//        itemMenu.addNewLeafTo("Test", "leafOfTest1", "Item 1");
-//        itemMenu.addNewLeafTo("Test", "leafOfTest2", "Item 2");
-//        itemMenu.addNewLeafTo("Test", "leafOfTest3", "Item 3");
-//        itemMenu.addNewLeafTo("Test", "leafOfTest4", "Item 4");
-//
-//        itemMenu.addNewMenu("Test2", "Test menu");
-//        itemMenu.addNewLeafTo("Test2", "leafOfTest21", "Item 1");
-//        itemMenu.addNewLeafTo("Test2", "leafOfTest22", "Item 2");
-//        itemMenu.addNewLeafTo("Test2", "leafOfTest23", "Item 3");
-//        itemMenu.addNewLeafTo("Test2", "leafOfTest24", "Item 4");
+        fillServiceMenu();
     }
 
     /**
@@ -73,7 +72,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        serviceMenu = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
@@ -119,18 +118,8 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Service select");
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 48, Short.MAX_VALUE)
-        );
+        serviceMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        serviceMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jButton2.setText("Print invoice");
 
@@ -217,7 +206,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(serviceMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -255,12 +244,12 @@ public class AddLaundryDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(serviceMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -313,24 +302,37 @@ public class AddLaundryDialog extends javax.swing.JDialog {
                     }
                 });
                 dialog.setVisible(true);
-                dialog.setVisible(false);
-                dialog.setVisible(true);
             }
         });
     }
-
+    
+    private void fillServiceMenu(){
+        try {
+            ArrayList<Service> services = serviceController.getAll();
+            for(Service service:services){
+                serviceMenu.add(new ServiceButton(service.getName()));
+            }
+        } catch (RemoteException | SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void fillItemMenu() {
         try {
             String categories[] = itemController.getCategories();
             ArrayList<Item> allItems = itemController.getAll();
-            
-            for(String category:categories){
+
+            for (String category : categories) {
                 itemMenu.addNewMenu(category, category);
             }
-            for(Item item:allItems){
-                itemMenu.addNewLeafTo(item.getCategory(), item.getName(), item.getName());
+            for (Item item : allItems) {
+                itemMenu.addNewLeafTo(item.getCategory(), item.getId(), item.getName());
             }
-            
+
+            for (AccordionLeafItem item : itemMenu.getAllLeafs()) {
+                item.addMouseListener(accordionMouseAdapter);
+            }
+
         } catch (RemoteException | SQLException | ClassNotFoundException ex) {
             Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -353,10 +355,27 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JPanel serviceMenu;
     // End of variables declaration//GEN-END:variables
+    MouseAdapter accordionMouseAdapter = new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            System.out.println(((AccordionItem) e.getSource()).getName());
+            System.out.println(((AccordionItem) e.getSource()).getText());
+        }
+    };
+    
+    private class ServiceButton extends JButton{
+        ServiceButton(String text){
+            super(text);
+        }
+    };
 }
+
+
+
+

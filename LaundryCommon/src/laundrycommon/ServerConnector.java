@@ -30,6 +30,7 @@ public class ServerConnector {
     private PackageController packageController;
     private MembershipController membershipController;
     private CustomerController customerController;
+    private ServiceController serviceController;
     
     
     private ServerConnector() throws NotBoundException, MalformedURLException, RemoteException{
@@ -75,9 +76,11 @@ public class ServerConnector {
         return null;
         
     }
-    public ServiceController getserviceController(){
-        return null;
-        
+    public ServiceController getServiceController() throws RemoteException{
+        if(serviceController == null){
+            serviceController = remoteFactory.getServiceController();
+        }
+        return serviceController;
     }
     public MembershipController getMemberShipController() throws RemoteException{
         if(membershipController==null){
