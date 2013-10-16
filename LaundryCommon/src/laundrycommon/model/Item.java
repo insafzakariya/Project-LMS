@@ -1,10 +1,12 @@
 package laundrycommon.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Spectore
  */
-public class Item implements Model {
+public class Item implements Serializable, Model {
 
     private String id;
     private String name;

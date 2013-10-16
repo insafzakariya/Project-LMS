@@ -22,4 +22,9 @@ public class ItemControllerImpl extends UnicastRemoteObject implements ItemContr
     public ArrayList<Item> getAll() throws RemoteException, SQLException, ClassNotFoundException {
         return ida.getAll();
     }
+
+    @Override
+    public String[] getCategories() throws RemoteException, SQLException, ClassNotFoundException {
+        return ida.getCategories();
+    }
 }

@@ -8,10 +8,9 @@ import laundrycommon.model.Item;
 
 /**
  *
- * @author Spectore
+ * @author Sentinel
  */
 public interface ItemController extends Remote{
-
     public ArrayList<Item> getAll() throws RemoteException, SQLException, ClassNotFoundException;
-    
+    public String[] getCategories() throws RemoteException, SQLException, ClassNotFoundException;
 }
