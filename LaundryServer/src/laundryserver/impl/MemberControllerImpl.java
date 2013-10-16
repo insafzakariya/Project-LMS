@@ -5,19 +5,22 @@ import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import laundrycommon.controller.MemberController;
 import laundrycommon.model.Member;
+import laundryserver.dbaccess.MemberDBAccess;
 
 /**
  *
  * @author Spectore
  */
 public class MemberControllerImpl extends UnicastRemoteObject implements MemberController{
+    private static MemberDBAccess memberDBAccess=new MemberDBAccess();
+    
     MemberControllerImpl() throws RemoteException{
         
     }
 
     @Override
     public boolean addMember(Member member) throws RemoteException, SQLException, ClassNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return memberDBAccess.addMember(member);
     }
     
 }
