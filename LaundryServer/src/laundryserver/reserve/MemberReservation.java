@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package laundryserver.reserve;
 
 import java.util.HashMap;
@@ -10,7 +6,7 @@ import laundrycommon.controller.MemberController;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public class MemberReservation {
 

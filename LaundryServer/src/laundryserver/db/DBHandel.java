@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package laundryserver.db;
 
 import java.sql.Connection;
@@ -12,7 +8,7 @@ import java.sql.Statement;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public class DBHandel {
 

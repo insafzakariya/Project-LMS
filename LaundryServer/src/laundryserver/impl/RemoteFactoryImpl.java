@@ -12,7 +12,7 @@ import laundrycommon.controller.MembershipController;
 import laundrycommon.controller.RemoteFactory;
 
 /**
- * @author Prashan
+ * @author Sentinel
  */
 public class RemoteFactoryImpl extends UnicastRemoteObject implements RemoteFactory {
 

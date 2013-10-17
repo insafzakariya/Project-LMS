@@ -9,7 +9,7 @@ import laundrycommon.model.Item;
 
 /**
  *
- * @author Spectore
+ * @author Sentinel
  */
 public class ItemControllerImpl extends UnicastRemoteObject implements ItemController {
 

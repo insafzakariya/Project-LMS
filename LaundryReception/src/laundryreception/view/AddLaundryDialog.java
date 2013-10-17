@@ -1,5 +1,6 @@
 package laundryreception.view;
 
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
@@ -10,11 +11,14 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import laundrycommon.ServerConnector;
-import laundrycommon.commonclass.accordion.AccordionItem;
 import laundrycommon.commonclass.accordion.AccordionLeafItem;
+import laundrycommon.commonclass.accordion.AccordionRootItem;
 import laundrycommon.controller.CustomerController;
 import laundrycommon.controller.ItemController;
 import laundrycommon.controller.MemberController;
@@ -34,6 +38,8 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     MemberController memberController;
     ServiceController serviceController;
     DefaultTableModel dtm;
+    int serviceCount;
+    JToggleButton[] serviceButtons;
 
     /**
      * Creates new form AddOrderDialog
@@ -41,6 +47,8 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     public AddLaundryDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        laundryTable.setShowGrid(false);
+        dtm = (DefaultTableModel) laundryTable.getModel();
 
         try {
             serverConnector = ServerConnector.getServerConnector();
@@ -69,11 +77,10 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        laundryTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         serviceMenu = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
@@ -83,9 +90,11 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        printButton = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         itemMenu = new laundrycommon.commonclass.accordion.AccordionMenu();
+        jButton5 = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -100,28 +109,26 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         jComboBox1.setEditable(true);
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
-        jButton1.setText("Remove");
+        laundryTable.setModel(getTableModel());
+        laundryTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(laundryTable);
+        laundryTable.getColumnModel().getColumn(1).setMinWidth(15);
+        laundryTable.getColumnModel().getColumn(1).setPreferredWidth(45);
+        laundryTable.getColumnModel().getColumn(1).setMaxWidth(70);
+        laundryTable.getColumnModel().getColumn(3).setMinWidth(15);
+        laundryTable.getColumnModel().getColumn(3).setPreferredWidth(70);
+        laundryTable.getColumnModel().getColumn(3).setMaxWidth(70);
+        laundryTable.getColumnModel().getColumn(4).setMinWidth(15);
+        laundryTable.getColumnModel().getColumn(4).setPreferredWidth(45);
+        laundryTable.getColumnModel().getColumn(4).setMaxWidth(70);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Service select");
 
         serviceMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        serviceMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        serviceMenu.setLayout(new java.awt.GridLayout(1, 5));
 
-        jButton2.setText("Print invoice");
+        cancelButton.setText("Cancel");
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -186,11 +193,20 @@ public class AddLaundryDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jButton3.setText("Cancel");
+        printButton.setText("Print Invoice");
 
         jButton4.setText("Print tag");
 
         itemMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jButton5.setText("Remove");
+
+        addButton.setText("Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -219,15 +235,17 @@ public class AddLaundryDialog extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(printButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -248,26 +266,80 @@ public class AddLaundryDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                        .addGap(22, 22, 22)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(printButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(itemMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        if (selectedItem != null) {
+            boolean first = true;
+            for (JToggleButton button : serviceButtons) {
+                if (button.isSelected()) {
+                    if (first) {
+                        dtm.addRow(new Object[]{selectedItem, 1, button.getText(), 1, 1});
+                    } else {
+                        dtm.addRow(new Object[]{"", null, button.getText(), 1, 1});
+                    }
+                    first=false;
+                }
+            }
+        }
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void fillItemMenu() {
+        try {
+            String categories[] = itemController.getCategories();
+            serviceCount = categories.length;
+            ArrayList<Item> allItems = itemController.getAll();
+
+            for (String category : categories) {
+                itemMenu.addNewMenu(category, category);
+            }
+            for (Item item : allItems) {
+                itemMenu.addNewLeafTo(item.getCategory(), item.getId(), item.getName());
+            }
+            for (AccordionLeafItem item : itemMenu.getAllLeafs()) {
+                item.addMouseListener(accordionMouseAdapter);
+            }
+            for (AccordionRootItem category : itemMenu.getMenus()) {
+                category.addMouseListener(accordionMouseAdapter);
+            }
+
+        } catch (RemoteException | SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void fillServiceMenu() {
+        try {
+            ArrayList<Service> services = serviceController.getAll();
+            serviceButtons = new JToggleButton[services.size()];
+            int i = 0;
+            for (Service service : services) {
+                serviceMenu.add(serviceButtons[i++] = new ServiceButton(service.getId(), service.getName()));
+            }
+        } catch (RemoteException | SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -295,6 +367,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 AddLaundryDialog dialog = new AddLaundryDialog(new javax.swing.JFrame(), true);
+                dialog.setLocationRelativeTo(null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -305,44 +378,12 @@ public class AddLaundryDialog extends javax.swing.JDialog {
             }
         });
     }
-    
-    private void fillServiceMenu(){
-        try {
-            ArrayList<Service> services = serviceController.getAll();
-            for(Service service:services){
-                serviceMenu.add(new ServiceButton(service.getName()));
-            }
-        } catch (RemoteException | SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void fillItemMenu() {
-        try {
-            String categories[] = itemController.getCategories();
-            ArrayList<Item> allItems = itemController.getAll();
-
-            for (String category : categories) {
-                itemMenu.addNewMenu(category, category);
-            }
-            for (Item item : allItems) {
-                itemMenu.addNewLeafTo(item.getCategory(), item.getId(), item.getName());
-            }
-
-            for (AccordionLeafItem item : itemMenu.getAllLeafs()) {
-                item.addMouseListener(accordionMouseAdapter);
-            }
-
-        } catch (RemoteException | SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton cancelButton;
     private laundrycommon.commonclass.accordion.AccordionMenu itemMenu;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -357,25 +398,71 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTable laundryTable;
+    private javax.swing.JButton printButton;
     private javax.swing.JPanel serviceMenu;
     // End of variables declaration//GEN-END:variables
+    String selectedItem;
+    String selectedCategory;
     MouseAdapter accordionMouseAdapter = new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent e) {
-            System.out.println(((AccordionItem) e.getSource()).getName());
-            System.out.println(((AccordionItem) e.getSource()).getText());
+            try {
+                selectedItem = ((AccordionLeafItem) e.getSource()).getText();
+            } catch (ClassCastException notAnItem) {
+                selectedCategory = ((AccordionRootItem) e.getSource()).getText();
+                selectedItem = null;
+            }
         }
     };
-    
-    private class ServiceButton extends JButton{
-        ServiceButton(String text){
+
+    private class ServiceButton extends JToggleButton {
+
+        int serviceID;
+
+        ServiceButton(int serviceID, String text) {
             super(text);
+            this.serviceID = serviceID;
         }
     };
+
+//    private class ServiceButtonActionListener implements ActionListener {
+//
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//            if (selectedItem != null) {
+//                dtm.addRow(new Object[]{selectedItem,
+//                    1,
+//                    ((JButton) e.getSource()).getText(),
+//                    0, 0});
+//            }
+//        }
+//    }
+    private TableModel getTableModel() {
+        return new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Item", "Qty", "Service", "Unit Cost", "Total",}) {
+            Class[] types = new Class[]{
+                JButton.class, String.class, Integer.class, String.class, Float.class, Float.class
+            };
+            boolean[] canEdit = new boolean[]{
+                false, true, false, false, false
+            };
+
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+
+            public TableCellRenderer getCellRenderer(int row, int col) {
+                return null;
+            }
+        };
+    }
 }
-
-
-
-

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package laundryserver.impl;
 
 import java.rmi.RemoteException;
@@ -15,7 +11,7 @@ import laundryserver.dbaccess.MembershipTypeDBAccess;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public class MemberShipControllerImpl extends UnicastRemoteObject implements MembershipController {
 

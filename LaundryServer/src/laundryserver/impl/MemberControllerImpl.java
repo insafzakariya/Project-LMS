@@ -9,7 +9,7 @@ import laundryserver.dbaccess.MemberDBAccess;
 
 /**
  *
- * @author Spectore
+ * @author Sentinel
  */
 public class MemberControllerImpl extends UnicastRemoteObject implements MemberController{
     private static MemberDBAccess memberDBAccess=new MemberDBAccess();

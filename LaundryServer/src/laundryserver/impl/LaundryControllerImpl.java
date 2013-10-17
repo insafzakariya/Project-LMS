@@ -6,7 +6,7 @@ import laundrycommon.controller.LaundryController;
 
 /**
  *
- * @author Spectore
+ * @author Sentinel
  */
 public class LaundryControllerImpl extends UnicastRemoteObject implements LaundryController{
     LaundryControllerImpl() throws RemoteException{
