@@ -14,7 +14,7 @@ import laundryserver.db.DBHandel;
 class ItemDBAccess {
 
     ArrayList<Item> getAll() throws SQLException, ClassNotFoundException {
-        ResultSet rst = DBHandel.getData(DBConnection.getConnectionTo(), "SELECT * FROM item order by category");
+        ResultSet rst = DBHandel.getData(DBConnection.getConnectionTo(), "SELECT * FROM item order by category, name");
         ArrayList<Item> itemList = new ArrayList<>();
         
         while (rst.next()) {
@@ -24,7 +24,7 @@ class ItemDBAccess {
     }
 
     String[] getCategories() throws SQLException, ClassNotFoundException {
-        ResultSet rst = DBHandel.getData(DBConnection.getConnectionTo(), "SELECT DISTINCT category FROM item");
+        ResultSet rst = DBHandel.getData(DBConnection.getConnectionTo(), "SELECT DISTINCT category FROM item order by category");
         rst.last();
         String categories[] = new String[rst.getRow()];
         rst.beforeFirst();

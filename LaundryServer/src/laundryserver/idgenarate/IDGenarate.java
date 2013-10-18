@@ -54,4 +54,10 @@ public class IDGenarate {
         }
 
     }
+
+    int nextLaundryID() throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = DBHandel.getData(DBConnection.getConnectionTo(), "SELECT MAX(lid) FROM laundry");
+        resultSet.next();
+        return resultSet.getInt(1)+1;
+    }
 }

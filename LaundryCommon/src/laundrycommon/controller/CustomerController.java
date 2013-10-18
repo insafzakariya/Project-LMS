@@ -8,7 +8,7 @@ import laundrycommon.model.Customer;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public interface CustomerController extends Remote{
     public boolean addCustomer(Customer customer) throws RemoteException, SQLException,ClassNotFoundException;

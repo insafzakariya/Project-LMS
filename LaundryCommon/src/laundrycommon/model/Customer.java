@@ -1,14 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package laundrycommon.model;
 
 import java.io.Serializable;
 
 /**
  *
- * @author insaf
+ * @author Sentinel
  */
 public class Customer implements Serializable, Model{
     private String cid;

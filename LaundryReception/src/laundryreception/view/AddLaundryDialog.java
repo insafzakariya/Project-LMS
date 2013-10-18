@@ -1,6 +1,5 @@
 package laundryreception.view;
 
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
@@ -23,6 +22,7 @@ import laundrycommon.controller.CustomerController;
 import laundrycommon.controller.ItemController;
 import laundrycommon.controller.MemberController;
 import laundrycommon.controller.ServiceController;
+import laundrycommon.controller.ServiceItemCostController;
 import laundrycommon.model.Item;
 import laundrycommon.model.Service;
 
@@ -37,9 +37,10 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     CustomerController customerController;
     MemberController memberController;
     ServiceController serviceController;
+    ServiceItemCostController serviceItemCostController;
     DefaultTableModel dtm;
     int serviceCount;
-    JToggleButton[] serviceButtons;
+    ServiceButton[] serviceButtons;
 
     /**
      * Creates new form AddOrderDialog
@@ -55,6 +56,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
             itemController = serverConnector.getItemController();
             customerController = serverConnector.getCustomerController();
             serviceController = serverConnector.getServiceController();
+            serviceItemCostController = serverConnector.getServiceItemCostController();
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -91,10 +93,14 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
         printButton = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        itemMenu = new laundrycommon.commonclass.accordion.AccordionMenu();
+        printTagButton = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        itemMenu = new laundrycommon.commonclass.accordion.AccordionMenu();
+        qtySpinner = new javax.swing.JSpinner();
+        jLabel29 = new javax.swing.JLabel();
+        autoPrintCheck = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -116,11 +122,11 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         laundryTable.getColumnModel().getColumn(1).setPreferredWidth(45);
         laundryTable.getColumnModel().getColumn(1).setMaxWidth(70);
         laundryTable.getColumnModel().getColumn(3).setMinWidth(15);
-        laundryTable.getColumnModel().getColumn(3).setPreferredWidth(70);
-        laundryTable.getColumnModel().getColumn(3).setMaxWidth(70);
+        laundryTable.getColumnModel().getColumn(3).setPreferredWidth(75);
+        laundryTable.getColumnModel().getColumn(3).setMaxWidth(75);
         laundryTable.getColumnModel().getColumn(4).setMinWidth(15);
-        laundryTable.getColumnModel().getColumn(4).setPreferredWidth(45);
-        laundryTable.getColumnModel().getColumn(4).setMaxWidth(70);
+        laundryTable.getColumnModel().getColumn(4).setPreferredWidth(75);
+        laundryTable.getColumnModel().getColumn(4).setMaxWidth(100);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel4.setText("Service select");
@@ -195,11 +201,19 @@ public class AddLaundryDialog extends javax.swing.JDialog {
 
         printButton.setText("Print Invoice");
 
-        jButton4.setText("Print tag");
-
-        itemMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        printTagButton.setText("Print tag");
+        printTagButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printTagButtonActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Remove");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         addButton.setText("Add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -208,44 +222,67 @@ public class AddLaundryDialog extends javax.swing.JDialog {
             }
         });
 
+        itemMenu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        itemMenu.setLeafHorizontalAlignment(1);
+        jScrollPane2.setViewportView(itemMenu);
+
+        qtySpinner.setValue(1);
+
+        jLabel29.setText("Qty");
+
+        autoPrintCheck.setText("Auto print tags on add");
+        autoPrintCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                autoPrintCheckActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, 0)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(qtySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(printTagButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(autoPrintCheck))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(printButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(11, 11, 11)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel4)
                             .addComponent(jLabel3))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(serviceMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel2))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(itemMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(printButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -265,24 +302,29 @@ public class AddLaundryDialog extends javax.swing.JDialog {
                     .addComponent(serviceMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
-                        .addGap(22, 22, 22)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jScrollPane2)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(printButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(printButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(itemMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                                .addGap(11, 11, 11)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addComponent(autoPrintCheck)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(printTagButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(qtySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel29)))))))
         );
 
         pack();
@@ -291,18 +333,39 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         if (selectedItem != null) {
             boolean first = true;
-            for (JToggleButton button : serviceButtons) {
+            for (ServiceButton button : serviceButtons) {
                 if (button.isSelected()) {
-                    if (first) {
-                        dtm.addRow(new Object[]{selectedItem, 1, button.getText(), 1, 1});
-                    } else {
-                        dtm.addRow(new Object[]{"", null, button.getText(), 1, 1});
+                    float unitCost = -1;
+                    try {
+                        unitCost = serviceItemCostController.getCost(button.getServiceID(), selectedItemID);
+                    } catch (RemoteException | SQLException | ClassNotFoundException ex) {
+                        Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    first=false;
+                    if (first) {
+                        dtm.addRow(new Object[]{selectedItem, (Integer)qtySpinner.getValue(), button.getText(), unitCost, unitCost*(Integer)qtySpinner.getValue()});
+                    } else {
+                        dtm.addRow(new Object[]{"", null, button.getText(), unitCost, unitCost*(Integer)qtySpinner.getValue()});
+                    }
+                    first = false;
                 }
             }
         }
     }//GEN-LAST:event_addButtonActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        System.out.println(laundryTable.getValueAt(0, 0));
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void printTagButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printTagButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_printTagButtonActionPerformed
+
+    private void autoPrintCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoPrintCheckActionPerformed
+        if(autoPrintCheck.isSelected())
+            printTagButton.setEnabled(false);
+        else
+            printTagButton.setEnabled(true);
+    }//GEN-LAST:event_autoPrintCheckActionPerformed
 
     private void fillItemMenu() {
         try {
@@ -322,6 +385,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
             for (AccordionRootItem category : itemMenu.getMenus()) {
                 category.addMouseListener(accordionMouseAdapter);
             }
+            itemMenu.calculateAvaiableSpace();
 
         } catch (RemoteException | SQLException | ClassNotFoundException ex) {
             Logger.getLogger(AddLaundryDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -331,7 +395,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     private void fillServiceMenu() {
         try {
             ArrayList<Service> services = serviceController.getAll();
-            serviceButtons = new JToggleButton[services.size()];
+            serviceButtons = new ServiceButton[services.size()];
             int i = 0;
             for (Service service : services) {
                 serviceMenu.add(serviceButtons[i++] = new ServiceButton(service.getId(), service.getName()));
@@ -348,7 +412,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -380,9 +444,9 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
+    private javax.swing.JCheckBox autoPrintCheck;
     private javax.swing.JButton cancelButton;
     private laundrycommon.commonclass.accordion.AccordionMenu itemMenu;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
@@ -394,22 +458,29 @@ public class AddLaundryDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTable laundryTable;
     private javax.swing.JButton printButton;
+    private javax.swing.JButton printTagButton;
+    private javax.swing.JSpinner qtySpinner;
     private javax.swing.JPanel serviceMenu;
     // End of variables declaration//GEN-END:variables
     String selectedItem;
     String selectedCategory;
+    int selectedItemID;
     MouseAdapter accordionMouseAdapter = new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent e) {
             try {
-                selectedItem = ((AccordionLeafItem) e.getSource()).getText();
+                AccordionLeafItem leaf = (AccordionLeafItem) e.getSource();
+                selectedItem = leaf.getText();
+                selectedItemID = Integer.parseInt(leaf.getName());
             } catch (ClassCastException notAnItem) {
                 selectedCategory = ((AccordionRootItem) e.getSource()).getText();
                 selectedItem = null;
@@ -419,7 +490,11 @@ public class AddLaundryDialog extends javax.swing.JDialog {
 
     private class ServiceButton extends JToggleButton {
 
-        int serviceID;
+        private int serviceID;
+
+        public int getServiceID() {
+            return serviceID;
+        }
 
         ServiceButton(int serviceID, String text) {
             super(text);
@@ -427,18 +502,6 @@ public class AddLaundryDialog extends javax.swing.JDialog {
         }
     };
 
-//    private class ServiceButtonActionListener implements ActionListener {
-//
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//            if (selectedItem != null) {
-//                dtm.addRow(new Object[]{selectedItem,
-//                    1,
-//                    ((JButton) e.getSource()).getText(),
-//                    0, 0});
-//            }
-//        }
-//    }
     private TableModel getTableModel() {
         return new DefaultTableModel(
                 new Object[][]{},
@@ -460,7 +523,7 @@ public class AddLaundryDialog extends javax.swing.JDialog {
                 return canEdit[columnIndex];
             }
 
-            public TableCellRenderer getCellRenderer(int row, int col) {
+            public TableCellRenderer getCellRenderer(int row, final int col) {
                 return null;
             }
         };

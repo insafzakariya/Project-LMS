@@ -10,6 +10,7 @@ import java.rmi.server.UnicastRemoteObject;
 import laundrycommon.controller.CustomerController;
 import laundrycommon.controller.MembershipController;
 import laundrycommon.controller.RemoteFactory;
+import laundrycommon.controller.ServiceItemCostController;
 
 /**
  * @author Sentinel
@@ -52,5 +53,10 @@ public class RemoteFactoryImpl extends UnicastRemoteObject implements RemoteFact
     @Override
     public CustomerController getCustomerController() throws RemoteException {
         return new CustomerControllerImpl();
+    }
+
+    @Override
+    public ServiceItemCostController getServiceItemCostController() throws RemoteException{
+        return new ServiceItemCostControllerImpl();
     }
 }

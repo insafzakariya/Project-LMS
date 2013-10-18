@@ -14,9 +14,7 @@ import laundryserver.dbaccess.CustomerDBAccess;
  */
 public class CustomerControllerImpl extends UnicastRemoteObject implements CustomerController{
     private static CustomerDBAccess customerDBAccess=new CustomerDBAccess();
-    CustomerControllerImpl() throws RemoteException{
-        
-    }
+    CustomerControllerImpl() throws RemoteException{  }
 
     @Override
     public boolean addCustomer(Customer customer) throws RemoteException, SQLException, ClassNotFoundException {

@@ -16,6 +16,7 @@ import laundrycommon.controller.MembershipController;
 import laundrycommon.controller.PackageController;
 import laundrycommon.controller.RemoteFactory;
 import laundrycommon.controller.ServiceController;
+import laundrycommon.controller.ServiceItemCostController;
 
 /**
  *
@@ -31,6 +32,7 @@ public class ServerConnector {
     private MembershipController membershipController;
     private CustomerController customerController;
     private ServiceController serviceController;
+    private ServiceItemCostController serviceItemCostController;
     
     
     private ServerConnector() throws NotBoundException, MalformedURLException, RemoteException{
@@ -94,6 +96,12 @@ public class ServerConnector {
         }
         return customerController;
     }
-    
-    
+
+    public ServiceItemCostController getServiceItemCostController() throws RemoteException {
+        if(serviceItemCostController==null){
+            serviceItemCostController = remoteFactory.getServiceItemCostController();
+        }
+        return serviceItemCostController;
+    }
+
 }
